@@ -18,13 +18,16 @@
 - [x] Buat database `tradesentry` di MySQL
 - [x] Jalankan migration default Laravel (users, cache, jobs)
 - [x] Test koneksi — server Laravel berhasil jalan dan merespons HTTP 200
+- [x] Buat 17 Migration & Models lengkap dengan schema sesuai ERD
+- [x] Buat Seeder (Country, RiskWeight, Sentiment, User) sebagai master data lokal
 
 ### Keputusan desain:
 - Nama project: **TradeSentry**
-- Struktur folder: Standar Laravel MVC + folder `Services/` (belum dibuat, nanti di fase berikutnya)
+- Struktur folder: Standar Laravel MVC + folder `Services/`
 - Naming convention: snake_case untuk tabel/kolom, PascalCase untuk model/controller
 - APP_TIMEZONE: Asia/Jakarta
 - Database user: root (tanpa password, standar XAMPP)
+- Sumber Data Negara: Master data lokal di database via Seeder (disetujui dosen)
 
 ### Catatan tambahan:
 - Dashboard utama nanti akan menampilkan **live map (Leaflet) + info kurs di space kecil** (permintaan dosen)
