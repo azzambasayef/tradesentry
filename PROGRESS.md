@@ -33,8 +33,23 @@
 - Dashboard utama nanti akan menampilkan **live map (Leaflet) + info kurs di space kecil** (permintaan dosen)
 - ERD 18 tabel sudah dirancang di implementation plan, migrasi custom akan dibuat di sub-fase berikutnya
 
+## Fase 1 & 2 — Auth, Base Layout & Country Dashboard
+
+**Status:** ✅ Selesai
+**Tanggal:** 2026-07-09
+
+### Yang dikerjakan:
+- [x] Setup layout utama `app.blade.php` dengan Bootstrap 5 dan tema *Dark Mode* elegan.
+- [x] Buat sistem autentikasi manual murni (Login, Register, Logout).
+- [x] Buat halaman *Dashboard* (Welcome Page).
+- [x] Buat halaman *Country Dashboard* untuk menampilkan daftar negara termonitor.
+- [x] Buat halaman *Country Detail* untuk melihat metrik spesifik per negara.
+
+### Catatan tambahan:
+- Sesuai kesepakatan, Auth dibuat manual agar sesuai level mahasiswa.
+- Komponen-komponen lanjutan (Cuaca, Berita, Kurs, Visualisasi Data) sudah disiapkan kotak *placeholder*-nya untuk diintegrasikan pada fase selanjutnya.
+
 ---
 
 ## Fase berikutnya:
-- **Fase 0 (lanjutan):** Buat 18 migration files + Eloquent Models + Seeder (positive/negative words, risk_weights)
-- **Fase 1:** Auth + base layout (Bootstrap 5, navigasi)
+- **Fase 3:** Integrasi API World Bank (GDP, inflasi, populasi) & *Data Fetching/Caching*.
