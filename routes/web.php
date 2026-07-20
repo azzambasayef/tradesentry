@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\CurrencyController;
 
 Route::get('/', function () {
     return redirect('/dashboard');
@@ -23,6 +24,7 @@ Route::middleware('auth')->group(function () {
     // Country Dashboard
     Route::get('/countries/{id}', [CountryController::class, 'show'])->name('countries.show');
     Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
+    Route::get('/currencies', [CurrencyController::class, 'index'])->name('currencies.index');
 
     // AJAX Endpoint for fetching all countries
     Route::get('/api/countries', function () {

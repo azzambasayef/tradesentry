@@ -118,8 +118,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="opacity: 0.5; cursor: not-allowed;" title="Coming soon">
-                        <i class="fas fa-cloud-sun-rain me-1"></i> Weather
+                    <a class="nav-link {{ request()->routeIs('currencies.*') ? 'active' : '' }}" href="{{ route('currencies.index') }}">
+                        <i class="fas fa-coins me-1"></i> Currencies
                     </a>
                 </li>
                 <li class="nav-item">
