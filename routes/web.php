@@ -21,6 +21,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Country Dashboard
-    Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
     Route::get('/countries/{id}', [CountryController::class, 'show'])->name('countries.show');
+    Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
+
+    // AJAX Endpoint for fetching all countries
+    Route::get('/api/countries', function () {
+        return response()->json(\App\Models\Country::all());
+    });
 });

@@ -48,8 +48,10 @@
 ### Catatan tambahan:
 - Sesuai kesepakatan, Auth dibuat manual agar sesuai level mahasiswa.
 - Komponen-komponen lanjutan (Cuaca, Berita, Kurs, Visualisasi Data) sudah disiapkan kotak *placeholder*-nya untuk diintegrasikan pada fase selanjutnya.
+- **Ide Brilian Ekstra (Akan dikerjakan di akhir project):** Fitur *Shipment Tracking Simulator*, di mana pengguna bisa menambahkan paket pengiriman. Rute dan kecepatan kapal di peta akan dipengaruhi langsung oleh sistem *Risk Scoring* (cuaca & berita) untuk mendapatkan nilai tambah dari dosen!
 
 ---
 
 ## Fase berikutnya:
+- **Fase 2 (Lanjutan):** Integrasi *REST Countries API* untuk menarik 200+ data negara ke database + Fitur *Search Bar* di peta.
 - **Fase 3:** Integrasi API World Bank (GDP, inflasi, populasi) & *Data Fetching/Caching*.

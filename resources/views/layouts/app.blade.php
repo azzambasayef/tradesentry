@@ -8,132 +8,186 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-blue: #0A84FF;
+            --dark-navy: #0F172A;
+            --dark-bg: #0A0F1C;
+            --card-bg: #111827;
+            --text-light: #F8FAFC;
+            --text-muted: #CBD5E1;
+            --accent-blue: #38BDF8;
+        }
         body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
         }
-        .sidebar {
-            height: 100vh;
-            background-color: #1e1e1e;
-            border-right: 1px solid #333;
-            padding-top: 20px;
-        }
-        .sidebar a {
-            color: #b3b3b3;
-            text-decoration: none;
-            padding: 10px 20px;
-            display: block;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        .sidebar a:hover, .sidebar a.active {
-            color: #00ffcc;
-            background-color: #2a2a2a;
-            border-left: 4px solid #00ffcc;
-        }
+        
+        /* Navbar Styling */
         .navbar {
-            background-color: #1e1e1e !important;
-            border-bottom: 1px solid #333;
+            background-color: rgba(15, 23, 42, 0.92) !important;
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #1e293b;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 1050;
         }
-        .card {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 10px;
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            font-size: 1.4rem;
         }
-        .card-header {
-            border-bottom: 1px solid #333;
-            background-color: #232323;
-            font-weight: 600;
-        }
-        .text-neon {
-            color: #00ffcc;
-        }
-        .btn-neon {
-            background-color: #00ffcc;
-            color: #121212;
-            border: none;
-            font-weight: bold;
+        .nav-link {
+            color: var(--text-muted) !important;
+            font-weight: 500;
+            padding: 8px 16px !important;
+            margin: 0 4px;
+            border-radius: 6px;
             transition: all 0.3s;
         }
-        .btn-neon:hover {
-            background-color: #00ccaa;
-            color: #121212;
-            box-shadow: 0 0 10px #00ffcc;
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-blue) !important;
+            background-color: rgba(10, 132, 255, 0.1);
         }
-        .mini-widget {
-            background-color: #2a2a2a;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 15px;
-            font-size: 0.85rem;
-            text-align: center;
-            border: 1px solid #444;
+        
+        /* Global Search Bar di Navbar */
+        .global-search {
+            background-color: rgba(10, 15, 28, 0.8);
+            border: 1px solid #1e293b;
+            color: var(--text-light);
+            border-radius: 20px;
+            padding: 5px 15px 5px 35px;
+            width: 300px;
+            font-size: 0.9rem;
+            transition: 0.3s;
         }
+        .global-search:focus {
+            background-color: var(--card-bg);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.2rem rgba(10, 132, 255, 0.25);
+            outline: none;
+            color: white;
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* General Card */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+        }
+        .text-primary-blue { color: var(--primary-blue) !important; }
+        .text-accent { color: var(--accent-blue) !important; }
     </style>
 </head>
 <body>
 
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        @auth
-        <div class="col-md-2 d-none d-md-block sidebar px-0 position-fixed">
-            <h3 class="text-center text-neon fw-bold mb-4">TradeSentry</h3>
-            
-            <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                <i class="fas fa-home me-2"></i> Dashboard
-            </a>
-            <a href="{{ route('countries.index') }}" class="{{ request()->routeIs('countries.*') ? 'active' : '' }}">
-                <i class="fas fa-globe me-2"></i> Countries
-            </a>
-            <a href="#" class="text-muted" style="cursor:not-allowed" title="Coming soon in Phase 4">
-                <i class="fas fa-cloud-sun-rain me-2"></i> Weather
-            </a>
-            <a href="#" class="text-muted" style="cursor:not-allowed" title="Coming soon in Phase 6">
-                <i class="fas fa-chart-line me-2"></i> Risk Engine
-            </a>
+@auth
+<nav class="navbar navbar-expand-lg sticky-top px-4 py-2 mb-3">
+    <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand text-light" href="{{ route('dashboard') }}">
+            <i class="fas fa-anchor text-primary-blue me-2"></i>TradeSentry
+        </a>
+        
+        <!-- Toggle Button for Mobile -->
+        <button class="navbar-toggler border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar">
+            <i class="fas fa-bars text-light"></i>
+        </button>
 
-            <!-- Mini Currency/Map Placeholder -->
-            <div class="mini-widget mt-5">
-                <div class="text-neon mb-1"><i class="fas fa-exchange-alt"></i> Live Rate</div>
-                <div>USD to IDR: <br> <span class="fw-bold">Waiting API...</span></div>
-            </div>
-            <div class="mini-widget mt-2">
-                <div class="text-neon mb-1"><i class="fas fa-map-marker-alt"></i> Global Map</div>
-                <div style="height: 60px; background: #333; border-radius: 4px; display:flex; align-items:center; justify-content:center;">
-                    <small>Leaflet Pending</small>
+        <div class="collapse navbar-collapse" id="topNavbar">
+            <!-- Navigation Links -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-4">
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                        <i class="fas fa-map-marked-alt me-1"></i> Live Map
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('countries.*') ? 'active' : '' }}" href="{{ route('countries.index') }}">
+                        <i class="fas fa-globe me-1"></i> Countries
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" style="opacity: 0.5; cursor: not-allowed;" title="Coming soon">
+                        <i class="fas fa-cloud-sun-rain me-1"></i> Weather
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" style="opacity: 0.5; cursor: not-allowed;" title="Coming soon">
+                        <i class="fas fa-chart-line me-1"></i> Risk Engine
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Right Menu (Search, Clock, Profile) -->
+            <div class="d-flex align-items-center gap-3">
+                <!-- Search Bar -->
+                <div class="position-relative d-none d-xl-block">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="form-control global-search" placeholder="Search countries, ports, ships...">
                 </div>
-            </div>
-        </div>
-        @endauth
 
-        <!-- Main Content -->
-        <div class="@auth col-md-10 offset-md-2 @else col-12 @endauth p-0">
-            @auth
-            <!-- Topbar -->
-            <nav class="navbar navbar-expand-lg navbar-dark px-4 py-3">
-                <div class="container-fluid">
-                    <span class="navbar-brand mb-0 h1 d-md-none text-neon fw-bold">TradeSentry</span>
-                    <div class="ms-auto d-flex align-items-center">
-                        <span class="text-light me-3"><i class="fas fa-user-circle me-1"></i> {{ Auth::user()->name }}</span>
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
-                        </form>
-                    </div>
+                <!-- Clock -->
+                <div class="text-muted d-none d-lg-block border-start border-secondary ps-3 ms-2">
+                    <i class="far fa-clock text-accent me-1"></i> <span id="utc-clock">00:00:00 UTC</span>
                 </div>
-            </nav>
-            @endauth
 
-            <div class="p-4">
-                @yield('content')
+                <!-- Notifications -->
+                <a href="#" class="text-light position-relative text-decoration-none mx-2">
+                    <i class="fas fa-bell fs-5"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">3</span>
+                </a>
+
+                <!-- Profile Dropdown -->
+                <div class="dropdown">
+                    <a href="#" class="text-light text-decoration-none fw-medium dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+                        <div class="bg-secondary rounded-circle d-inline-flex justify-content-center align-items-center me-2" style="width: 32px; height: 32px; background-color: var(--primary-blue) !important;">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        {{ Auth::user()->name }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark shadow" style="background-color: var(--card-bg); border-color: #1e293b;">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider border-secondary"></li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST" class="px-2">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-danger rounded"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
+</nav>
+@endauth
+
+<div class="container-fluid px-4 pb-4">
+    @yield('content')
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Real-time UTC Clock update
+    const updateClock = () => {
+        const clockElement = document.getElementById('utc-clock');
+        if (clockElement) {
+            clockElement.textContent = new Date().toISOString().substr(11, 8) + ' UTC';
+        }
+    };
+    setInterval(updateClock, 1000);
+    updateClock();
+</script>
 </body>
 </html>

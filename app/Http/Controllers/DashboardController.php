@@ -9,8 +9,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Fetch countries for the live map
-        $countries = Country::all();
-        return view('dashboard.index', compact('countries'));
+        return view('dashboard.index');
     }
 }
