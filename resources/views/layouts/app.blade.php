@@ -123,7 +123,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="opacity: 0.5; cursor: not-allowed;" title="Coming soon">
+                    <a class="nav-link {{ request()->routeIs('risk.*') ? 'active' : '' }}" href="{{ route('risk.index') }}">
                         <i class="fas fa-chart-line me-1"></i> Risk Engine
                     </a>
                 </li>

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\RiskController;
 
 Route::get('/', function () {
     return redirect('/dashboard');
@@ -25,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/countries/{id}', [CountryController::class, 'show'])->name('countries.show');
     Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
     Route::get('/currencies', [CurrencyController::class, 'index'])->name('currencies.index');
+    Route::get('/risk', [RiskController::class, 'index'])->name('risk.index');
+    Route::post('/risk/recalculate', [RiskController::class, 'recalculate'])->name('risk.recalculate');
 
     // AJAX Endpoint for fetching all countries
     Route::get('/api/countries', function () {

@@ -6,5 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class RiskScore extends Model
 {
-    //
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    protected $guarded = [];
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
 }

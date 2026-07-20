@@ -36,12 +36,41 @@
                 <marquee behavior="scroll" direction="left" class="text-light m-0" style="font-size: 0.95rem; font-weight: 500;">
                     <i class="fas fa-newspaper text-accent me-1"></i> <span id="news-ticker-1">GNews API Pending (Phase 7): Waiting for real-time geopolitical updates...</span> 
                     <span class="mx-3 text-muted">|</span> 
-                    <i class="fas fa-exchange-alt text-success me-1"></i> <span id="currency-ticker-1">ExchangeRate API Pending (Phase 5): USD/IDR rates will appear here...</span> 
+                    <i class="fas fa-exchange-alt text-success me-1"></i> <span id="currency-ticker-1">
+                        @if(isset($topCurrencies) && $topCurrencies->count() > 0)
+                            Live Rates (Base USD): 
+                            @foreach($topCurrencies as $tc)
+                                <strong>{{ $tc->target_currency }}</strong> {{ number_format($tc->rate, 2) }} &nbsp;&bull;&nbsp;
+                            @endforeach
+                        @else
+                            ExchangeRate API Pending (Phase 5): USD/IDR rates will appear here...
+                        @endif
+                    </span> 
                     <span class="mx-3 text-muted">|</span> 
                     <i class="fas fa-newspaper text-accent me-1"></i> <span id="news-ticker-2">Fetching global supply chain risks...</span>
                 </marquee>
             </div>
         </div>
+
+        <!-- Currency Quick Glance Widgets -->
+        @if(isset($topCurrencies) && $topCurrencies->count() > 0)
+        <div class="row mt-4 g-3">
+            <div class="col-12">
+                <h6 class="text-muted text-uppercase fw-bold" style="letter-spacing: 1px;">Live Foreign Exchange Rates (Base: USD)</h6>
+            </div>
+            @foreach($topCurrencies->take(4) as $tc)
+            <div class="col-md-3 col-6">
+                <div class="card bg-transparent border-secondary hover-effect" style="border-radius: 8px;">
+                    <div class="card-body p-3 text-center">
+                        <div class="text-muted mb-1" style="font-size: 0.8rem;">1 USD =</div>
+                        <h4 class="text-accent m-0 fw-bold">{{ number_format($tc->rate, 2) }} <span style="font-size: 1rem;" class="text-light">{{ $tc->target_currency }}</span></h4>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        @endif
+
     </div>
 </div>
 
