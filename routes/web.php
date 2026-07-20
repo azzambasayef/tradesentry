@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\RiskController;
+use App\Http\Controllers\NewsController;
 
 Route::get('/', function () {
     return redirect('/dashboard');
@@ -28,9 +29,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/currencies', [CurrencyController::class, 'index'])->name('currencies.index');
     Route::get('/risk', [RiskController::class, 'index'])->name('risk.index');
     Route::post('/risk/recalculate', [RiskController::class, 'recalculate'])->name('risk.recalculate');
+    Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+    Route::post('/news/fetch', [NewsController::class, 'fetch'])->name('news.fetch');
 
     // AJAX Endpoint for fetching all countries
     Route::get('/api/countries', function () {
-        return response()->json(\App\Models\Country::all());
+        return response()->json(\App\Models\Country::with('riskScore')->get());
     });
+
+    // REST API Endpoint for fetching all ports
+    Route::get('/api/ports', [App\Http\Controllers\PortController::class, 'api'])->name('api.ports');
+    
+    // REST API Endpoint for fetching live ships
+    Route::get('/api/ships', [App\Http\Controllers\PortController::class, 'apiShips'])->name('api.ships');
 });

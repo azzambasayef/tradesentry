@@ -19,10 +19,10 @@ class RiskEngineService
         // 1. Get Weights from DB
         $weights = RiskWeight::all()->pluck('weight', 'category')->toArray();
         
-        $weightWeather = ($weights['weather'] ?? 30) / 100;
-        $weightInflation = ($weights['inflation'] ?? 15) / 100;
-        $weightCurrency = ($weights['currency'] ?? 20) / 100;
-        $weightNews = ($weights['news'] ?? 35) / 100;
+        $weightWeather = $weights['weather'] ?? 0.30;
+        $weightInflation = $weights['inflation'] ?? 0.15;
+        $weightCurrency = $weights['currency'] ?? 0.20; 
+        $weightNews = $weights['news'] ?? 0.35;
 
         // 2. Calculate Weather Risk (0-100)
         // Dummy normalization for now based on latitude (just for prototyping if no real weather exists)
@@ -49,8 +49,16 @@ class RiskEngineService
             $currencyRisk = min(max(abs(sin($exchangeRate->rate)) * 100, 10), 90);
         }
 
-        // 5. Calculate News Risk (0-100) (Phase 7 placeholder)
-        $newsRisk = rand(10, 95); 
+        // 5. Calculate News Risk (0-100)
+        // Average sentiment score of all news related to this country
+        $newsRisk = 50; // default neutral if no news found
+        $newsArticles = \App\Models\NewsArticle::where('country_id', $country->id)->get();
+        if ($newsArticles->count() > 0) {
+            $averageScore = \App\Models\NewsSentiment::whereIn('news_article_id', $newsArticles->pluck('id'))->avg('score');
+            if ($averageScore !== null) {
+                $newsRisk = $averageScore;
+            }
+        } 
 
         // 6. Calculate Total Weighted Score
         $totalScore = ($weatherRisk * $weightWeather) +

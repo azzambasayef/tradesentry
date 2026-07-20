@@ -109,12 +109,22 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-4">
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
-                        <i class="fas fa-map-marked-alt me-1"></i> Live Map
+                        <i class="fas fa-chart-pie me-1"></i> Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('countries.*') ? 'active' : '' }}" href="{{ route('countries.index') }}">
                         <i class="fas fa-globe me-1"></i> Countries
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('news.*') ? 'active' : '' }}" href="{{ route('news.index') }}">
+                        <i class="fas fa-newspaper me-1"></i> News Intel
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" style="opacity: 0.5; cursor: not-allowed;" title="Coming soon">
+                        <i class="fas fa-cloud-sun-rain me-1"></i> Weather
                     </a>
                 </li>
                 <li class="nav-item">
@@ -154,7 +164,7 @@
                         <div class="bg-secondary rounded-circle d-inline-flex justify-content-center align-items-center me-2" style="width: 32px; height: 32px; background-color: var(--primary-blue) !important;">
                             <i class="fas fa-user text-white"></i>
                         </div>
-                        {{ Auth::user()->name }}
+                        <span class="d-none d-xl-inline-block text-truncate" style="max-width: 100px;">{{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark shadow" style="background-color: var(--card-bg); border-color: #1e293b;">
                         <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>

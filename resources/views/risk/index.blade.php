@@ -51,7 +51,7 @@
                                 @endif
                                 {{ ucfirst($weight->category) }} Risk
                             </div>
-                            <h3 class="text-light m-0 fw-bold">{{ $weight->weight }}%</h3>
+                            <h3 class="text-light m-0 fw-bold">{{ number_format((float)$weight->weight * 100, 0) }}%</h3>
                         </div>
                     </div>
                     @endforeach

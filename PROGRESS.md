@@ -40,18 +40,31 @@
 
 ### Yang dikerjakan:
 - [x] Setup layout utama `app.blade.php` dengan Bootstrap 5 dan tema *Dark Mode* elegan.
-- [x] Buat sistem autentikasi manual murni (Login, Register, Logout).
+- [x] Buat sistem autentikasi murni (Login, Register, Logout).
 - [x] Buat halaman *Dashboard* (Welcome Page).
 - [x] Buat halaman *Country Dashboard* untuk menampilkan daftar negara termonitor.
 - [x] Buat halaman *Country Detail* untuk melihat metrik spesifik per negara.
 
-### Catatan tambahan:
-- Sesuai kesepakatan, Auth dibuat manual agar sesuai level mahasiswa.
-- Komponen-komponen lanjutan (Cuaca, Berita, Kurs, Visualisasi Data) sudah disiapkan kotak *placeholder*-nya untuk diintegrasikan pada fase selanjutnya.
-- **Ide Brilian Ekstra (Akan dikerjakan di akhir project):** Fitur *Shipment Tracking Simulator*, di mana pengguna bisa menambahkan paket pengiriman. Rute dan kecepatan kapal di peta akan dipengaruhi langsung oleh sistem *Risk Scoring* (cuaca & berita) untuk mendapatkan nilai tambah dari dosen!
+## Fase 3-6 — Integrasi API Data Global & Risk Engine
+**Status:** ✅ Selesai
+- [x] Fase 3: World Bank API & Caching
+- [x] Fase 4: Weather API (Open-Meteo) & Leaflet Maps
+- [x] Fase 5: Currency API & Chart.js
+- [x] Fase 6: Risk Scoring Engine (algoritma bobot custom)
 
----
+## Fase 7 — News Intelligence
+**Status:** ✅ Selesai
+- [x] Lexicon Sentiment Analysis PHP
+- [x] Integrasi BBC RSS & Google News RSS
+- [x] Dasbor pencarian berita per negara
+
+## Fase 8 — Port Location Dashboard & Live Operations
+**Status:** ✅ Selesai
+- [x] Peta interaktif Leaflet.js
+- [x] Integrasi ribuan Pelabuhan Logistik & 500 Armada Kapal Kargo
+- [x] Pembuatan **Backend Geoprocessing Engine (Node.js)** menggunakan Algoritma Dijkstra (*searoute-js*) untuk menggambar garis lintasan kapal yang menghindari benua secara otomatis
+- [x] UI/UX Perbaikan (Navbar responsif & Interaktivitas *sidebar* negara di Dasbor)
 
 ## Fase berikutnya:
-- **Fase 2 (Lanjutan):** Integrasi *REST Countries API* untuk menarik 200+ data negara ke database + Fitur *Search Bar* di peta.
-- **Fase 3:** Integrasi API World Bank (GDP, inflasi, populasi) & *Data Fetching/Caching*.
+- **Fase 9:** Data Visualization Dashboard (trend GDP/Inflation/Currency/Risk)
+- **Fase 10:** Country Comparison Engine

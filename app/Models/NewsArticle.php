@@ -6,5 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class NewsArticle extends Model
 {
-    //
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    protected $guarded = [];
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function sentimentData()
+    {
+        return $this->hasOne(NewsSentiment::class, 'news_article_id');
+    }
 }

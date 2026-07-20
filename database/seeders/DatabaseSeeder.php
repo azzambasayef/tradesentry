@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,
             RiskWeightSeeder::class,
             SentimentSeeder::class,
+            PortSeeder::class,
+            ShipSeeder::class,
         ]);
     }
 }
