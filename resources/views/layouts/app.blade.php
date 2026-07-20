@@ -138,7 +138,7 @@
                 </div>
 
                 <!-- Clock -->
-                <div class="text-muted d-none d-lg-block border-start border-secondary ps-3 ms-2">
+                <div class="text-muted d-none d-lg-flex align-items-center border-start border-secondary ps-3 ms-2 text-nowrap">
                     <i class="far fa-clock text-accent me-1"></i> <span id="utc-clock">00:00:00 UTC</span>
                 </div>
 
@@ -179,11 +179,13 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Real-time UTC Clock update
+    // Real-time WIB Clock update
     const updateClock = () => {
         const clockElement = document.getElementById('utc-clock');
         if (clockElement) {
-            clockElement.textContent = new Date().toISOString().substr(11, 8) + ' UTC';
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour12: false });
+            clockElement.textContent = timeString + ' WIB';
         }
     };
     setInterval(updateClock, 1000);
