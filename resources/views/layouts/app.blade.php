@@ -183,6 +183,9 @@
                             <span class="d-block text-light fw-bold">{{ Auth::user()->name }}</span>
                             <small class="text-muted">{{ Auth::user()->email }}</small>
                         </li>
+                        @if(Auth::user()->role === 'admin')
+                        <li><a class="dropdown-item mt-1 text-warning fw-bold" href="{{ route('admin.index') }}"><i class="fas fa-shield-alt me-2"></i>Admin Panel</a></li>
+                        @endif
                         <li><a class="dropdown-item mt-1" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
                         <li><hr class="dropdown-divider border-secondary"></li>
                         <li>

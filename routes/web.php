@@ -28,6 +28,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/watchlist', [WatchlistController::class, 'index'])->name('watchlist.index');
     Route::post('/watchlist/toggle/{country_id}', [WatchlistController::class, 'toggle'])->name('watchlist.toggle');
 
+    // Admin Routes
+    Route::middleware(['is_admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\AdminController::class, 'index'])->name('index');
+        
+        Route::put('/users/{id}/role', [\App\Http\Controllers\AdminController::class, 'updateUserRole'])->name('users.role');
+        Route::delete('/users/{id}', [\App\Http\Controllers\AdminController::class, 'deleteUser'])->name('users.delete');
+
+        Route::post('/ports', [\App\Http\Controllers\AdminController::class, 'storePort'])->name('ports.store');
+        Route::put('/ports/{id}', [\App\Http\Controllers\AdminController::class, 'updatePort'])->name('ports.update');
+        Route::delete('/ports/{id}', [\App\Http\Controllers\AdminController::class, 'deletePort'])->name('ports.delete');
+
+        Route::post('/articles', [\App\Http\Controllers\AdminController::class, 'storeArticle'])->name('articles.store');
+        Route::put('/articles/{id}', [\App\Http\Controllers\AdminController::class, 'updateArticle'])->name('articles.update');
+        Route::delete('/articles/{id}', [\App\Http\Controllers\AdminController::class, 'deleteArticle'])->name('articles.delete');
+    });
+
     // Country Dashboard
     Route::get('/countries/{id}', [CountryController::class, 'show'])->name('countries.show');
     Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
