@@ -132,6 +132,36 @@
         </div>
     </div>
     
+    <!-- Phase 9: Data Visualization Dashboard -->
+    <div class="col-12 mt-4">
+        <h4 class="text-light mb-3 border-bottom border-secondary pb-2"><i class="fas fa-chart-line text-accent me-2"></i>Data Visualization Analytics</h4>
+        <div class="row g-4">
+            <!-- Currency Trend Chart -->
+            <div class="col-md-8">
+                <div class="card h-100 border-secondary shadow-lg">
+                    <div class="card-header border-secondary bg-transparent text-light">
+                        <h6 class="m-0">30-Day Currency Exchange Trend ({{ $country->currency_code }} to USD)</h6>
+                    </div>
+                    <div class="card-body p-3">
+                        <canvas id="currencyChart" style="max-height: 250px; width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Risk Breakdown Chart -->
+            <div class="col-md-4">
+                <div class="card h-100 border-secondary shadow-lg">
+                    <div class="card-header border-secondary bg-transparent text-light">
+                        <h6 class="m-0">Risk Score Composition</h6>
+                    </div>
+                    <div class="card-body p-3 d-flex justify-content-center align-items-center">
+                        <canvas id="riskChart" style="max-height: 250px; width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Mini Map -->
     <div class="col-12 mt-4">
         <div class="card border-secondary shadow-lg">
@@ -175,6 +205,107 @@
         });
         
         L.marker([lat, lng], {icon: blueIcon}).addTo(miniMap);
+        
+        // --- Phase 9: Data Visualization (Chart.js) ---
+        if (typeof Chart === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+            script.onload = () => initCharts();
+            document.head.appendChild(script);
+        } else {
+            initCharts();
+        }
+
+        function initCharts() {
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.borderColor = '#334155';
+
+        // 1. Currency Trend Line Chart
+        const currencyData = @json($currencyHistory);
+        if (currencyData && currencyData.length > 0) {
+            const ctxCurrency = document.getElementById('currencyChart').getContext('2d');
+            const dates = currencyData.map(d => {
+                let dateObj = new Date(d.date);
+                return dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+            });
+            const rates = currencyData.map(d => d.rate);
+            
+            new Chart(ctxCurrency, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Exchange Rate (against USD)',
+                        data: rates,
+                        borderColor: '#0a84ff',
+                        backgroundColor: 'rgba(10, 132, 255, 0.15)',
+                        borderWidth: 2,
+                        pointRadius: 1,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: false }
+                    }
+                }
+            });
+        } else {
+            document.getElementById('currencyChart').parentElement.innerHTML = '<div class="text-center text-muted py-5"><i class="fas fa-chart-line fa-3x mb-3"></i><p>Trend data unavailable</p></div>';
+        }
+
+        // 2. Risk Breakdown Doughnut Chart
+        const riskWeights = @json($riskWeights);
+        const riskScore = @json($country->riskScore);
+        
+        if (riskScore) {
+            const ctxRisk = document.getElementById('riskChart').getContext('2d');
+            
+            // Calculate absolute score contribution based on weights
+            const wWeather = riskWeights.weather || 0.30;
+            const wInflation = riskWeights.inflation || 0.15;
+            const wNews = riskWeights.news || 0.35;
+            const wCurrency = riskWeights.currency || 0.20;
+            
+            new Chart(ctxRisk, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Weather', 'Inflation', 'Geopolitics', 'Currency'],
+                    datasets: [{
+                        data: [
+                            parseFloat((riskScore.weather_risk * wWeather).toFixed(2)),
+                            parseFloat((riskScore.inflation_risk * wInflation).toFixed(2)),
+                            parseFloat((riskScore.news_risk * wNews).toFixed(2)),
+                            parseFloat((riskScore.currency_risk * wCurrency).toFixed(2))
+                        ],
+                        backgroundColor: [
+                            '#0a84ff', // Blue
+                            '#ffcc00', // Yellow
+                            '#ff3b30', // Red
+                            '#30d158'  // Green
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15 } }
+                    }
+                }
+            });
+        }
+        
+        } // End of initCharts()
     });
 </script>
 @endsection

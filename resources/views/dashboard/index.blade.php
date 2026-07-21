@@ -37,6 +37,32 @@
         <div class="position-relative">
             <div id="map" class="shadow-lg border border-secondary rounded" style="height: 70vh; background: #000;"></div>
             
+            <!-- Weather Panel Overlay -->
+            <div id="weather-panel" class="position-absolute top-0 end-0 m-3 p-3 rounded shadow-lg d-none" style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); border: 1px solid var(--primary-blue); z-index: 1000; min-width: 250px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-light m-0"><i class="fas fa-crosshairs text-accent me-2"></i>Weather Intel</h5>
+                    <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('weather-panel').classList.add('d-none')"></button>
+                </div>
+                <div id="weather-loading" class="text-center py-4 d-none">
+                    <i class="fas fa-circle-notch fa-spin text-primary-blue fa-2x mb-2"></i>
+                    <p class="text-muted small m-0">Connecting to satellite...</p>
+                </div>
+                <div id="weather-data">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-thermometer-half text-danger fa-2x me-3"></i>
+                        <div><small class="text-muted d-block text-uppercase">Temperature</small><h3 id="w-temp" class="text-light fw-bold m-0">--°C</h3></div>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-wind text-accent-blue fa-2x me-3"></i>
+                        <div><small class="text-muted d-block text-uppercase">Wind Speed</small><h4 id="w-wind" class="text-light m-0">-- <span class="fs-6">km/h</span></h4></div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-tint text-primary-blue fa-2x me-3"></i>
+                        <div><small class="text-muted d-block text-uppercase">Humidity</small><h4 id="w-humid" class="text-light m-0">--%</h4></div>
+                    </div>
+                </div>
+            </div>
+
             <div class="position-absolute bottom-0 start-0 m-3 p-2 rounded shadow-lg" style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); border: 1px solid var(--primary-blue); z-index: 1000; width: calc(100% - 2rem); display: flex; align-items: center;">
                 <span class="badge bg-primary-blue me-3 px-2 py-1 text-uppercase">Live</span>
                 <marquee behavior="scroll" direction="left" class="text-light m-0" style="font-size: 0.95rem; font-weight: 500;">
@@ -211,7 +237,45 @@
             });
         }
 
-        map.on('click', () => { if(activeRouteLine) map.removeLayer(activeRouteLine); });
+        let weatherMarker = null;
+
+        map.on('click', (e) => { 
+            if(activeRouteLine) map.removeLayer(activeRouteLine); 
+
+            const lat = e.latlng.lat;
+            const lng = e.latlng.lng;
+            
+            if(weatherMarker) map.removeLayer(weatherMarker);
+            weatherMarker = L.marker([lat, lng]).addTo(map);
+            
+            const panel = document.getElementById('weather-panel');
+            const loading = document.getElementById('weather-loading');
+            const dataContainer = document.getElementById('weather-data');
+            
+            panel.classList.remove('d-none');
+            loading.classList.remove('d-none');
+            dataContainer.classList.add('d-none');
+            
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,wind_speed_10m`)
+                .then(res => res.json())
+                .then(data => {
+                    loading.classList.add('d-none');
+                    dataContainer.classList.remove('d-none');
+                    if(data.current) {
+                        document.getElementById('w-temp').innerText = data.current.temperature_2m + '°C';
+                        document.getElementById('w-wind').innerHTML = data.current.wind_speed_10m + ' <span class="fs-6">km/h</span>';
+                        document.getElementById('w-humid').innerText = data.current.relative_humidity_2m + '%';
+                    } else {
+                        document.getElementById('w-temp').innerText = 'N/A';
+                    }
+                })
+                .catch(() => {
+                    loading.classList.add('d-none');
+                    dataContainer.classList.remove('d-none');
+                    document.getElementById('w-temp').innerText = 'Error';
+                });
+        });
+        
         document.getElementById('toggleCountries').addEventListener('change', e => e.target.checked ? map.addLayer(countryLayer) : map.removeLayer(countryLayer));
         document.getElementById('togglePorts').addEventListener('change', e => e.target.checked ? map.addLayer(portCluster) : map.removeLayer(portCluster));
         document.getElementById('toggleShips').addEventListener('change', e => { e.target.checked ? map.addLayer(shipCluster) : (map.removeLayer(shipCluster), activeRouteLine && map.removeLayer(activeRouteLine)); });

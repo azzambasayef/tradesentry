@@ -113,8 +113,16 @@ class CountryController extends Controller
             }
         }
 
+        // Fetch Currency History for 30 days Trend Chart
+        $currencyHistory = \App\Models\CurrencyHistory::where('target_currency', $country->currency_code)
+            ->orderBy('date', 'asc')
+            ->get();
+            
+        // Get Risk Weights to calculate exact breakdown values
+        $riskWeights = \App\Models\RiskWeight::all()->pluck('weight', 'category')->toArray();
+
         $country->refresh();
 
-        return view('countries.show', compact('country', 'gdpData', 'inflationData', 'weather'));
+        return view('countries.show', compact('country', 'gdpData', 'inflationData', 'weather', 'currencyHistory', 'riskWeights'));
     }
 }
