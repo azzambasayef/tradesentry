@@ -166,7 +166,15 @@
                 let marker = null;
                 if(c.lat && c.lng) {
                     marker = L.marker([c.lat, c.lng], {icon: countryIcon});
-                    marker.bindPopup(`<b>${c.name}</b><hr class="my-1"><small>Capital: ${c.capital || 'N/A'}<br>Pop: ${Number(c.population).toLocaleString()}</small>`);
+                    marker.bindPopup(`
+                        <div class="text-center mb-1">
+                            <img src="https://flagcdn.com/w40/${c.code.toLowerCase()}.png" class="border border-secondary rounded shadow-sm mb-2" style="width: 30px;">
+                            <h6 class="m-0 fw-bold">${c.name}</h6>
+                        </div>
+                        <hr class="my-1 border-secondary">
+                        <small class="d-block mb-2 text-light">Capital: ${c.capital || 'N/A'}<br>Pop: ${Number(c.population).toLocaleString()}</small>
+                        <a href="/countries/${c.id}" class="btn btn-sm btn-primary text-white w-100 py-1 fw-bold" style="font-size: 0.75rem; letter-spacing: 0.5px;">View Dashboard</a>
+                    `);
                     countryLayer.addLayer(marker);
                 }
                 
@@ -279,6 +287,29 @@
         document.getElementById('toggleCountries').addEventListener('change', e => e.target.checked ? map.addLayer(countryLayer) : map.removeLayer(countryLayer));
         document.getElementById('togglePorts').addEventListener('change', e => e.target.checked ? map.addLayer(portCluster) : map.removeLayer(portCluster));
         document.getElementById('toggleShips').addEventListener('change', e => { e.target.checked ? map.addLayer(shipCluster) : (map.removeLayer(shipCluster), activeRouteLine && map.removeLayer(activeRouteLine)); });
+
+        // --- Live Filtering Logic for Monitored Locations Sidebar ---
+        const searchInput = document.querySelector('.global-search');
+        if (searchInput) {
+            // Prevent form submission if they press enter on dashboard
+            searchInput.closest('form')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+            });
+
+            searchInput.addEventListener('input', function(e) {
+                const keyword = e.target.value.toLowerCase();
+                const items = document.querySelectorAll('.country-item');
+                
+                items.forEach(item => {
+                    const text = item.innerText.toLowerCase();
+                    if (text.includes(keyword)) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
     });
 </script>
 @endsection

@@ -10,9 +10,17 @@ use App\Models\EconomicIndicator;
 
 class CountryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $countries = Country::all();
+        $query = Country::query();
+        if ($request->filled('q')) {
+            $search = $request->q;
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('capital', 'like', "%{$search}%")
+                  ->orWhere('region', 'like', "%{$search}%")
+                  ->orWhere('code', 'like', "%{$search}%");
+        }
+        $countries = $query->orderBy('name', 'asc')->get();
         return view('countries.index', compact('countries'));
     }
 
@@ -30,15 +38,19 @@ class CountryController extends Controller
                 try {
                     $url = "https://api.worldbank.org/v2/country/{$country->code_alpha3}/indicator/NY.GDP.MKTP.CD?format=json";
                     $response = Http::timeout(5)->get($url);
-                    if ($response->successful() && isset($response[1][0]['value'])) {
-                        $value = $response[1][0]['value'];
-                        $year = $response[1][0]['date'];
-                        $gdpRecord = EconomicIndicator::create([
-                            'country_id' => $country->id,
-                            'indicator_type' => 'gdp',
-                            'year' => $year,
-                            'value' => $value
-                        ]);
+                    if ($response->successful() && isset($response[1]) && is_array($response[1])) {
+                        $recentYears = array_slice($response[1], 0, 4);
+                        foreach ($recentYears as $item) {
+                            if (isset($item['value']) && !is_null($item['value'])) {
+                                $gdpRecord = EconomicIndicator::create([
+                                    'country_id' => $country->id,
+                                    'indicator_type' => 'gdp',
+                                    'year' => $item['date'],
+                                    'value' => $item['value']
+                                ]);
+                                break;
+                            }
+                        }
                     }
                 } catch (\Exception $e) {
                     Log::error("Failed to fetch GDP for {$country->code_alpha3}: " . $e->getMessage());
@@ -55,15 +67,19 @@ class CountryController extends Controller
                 try {
                     $url = "https://api.worldbank.org/v2/country/{$country->code_alpha3}/indicator/FP.CPI.TOTL.ZG?format=json";
                     $response = Http::timeout(5)->get($url);
-                    if ($response->successful() && isset($response[1][0]['value'])) {
-                        $value = $response[1][0]['value'];
-                        $year = $response[1][0]['date'];
-                        $inflationRecord = EconomicIndicator::create([
-                            'country_id' => $country->id,
-                            'indicator_type' => 'inflation',
-                            'year' => $year,
-                            'value' => $value
-                        ]);
+                    if ($response->successful() && isset($response[1]) && is_array($response[1])) {
+                        $recentYears = array_slice($response[1], 0, 4);
+                        foreach ($recentYears as $item) {
+                            if (isset($item['value']) && !is_null($item['value'])) {
+                                $inflationRecord = EconomicIndicator::create([
+                                    'country_id' => $country->id,
+                                    'indicator_type' => 'inflation',
+                                    'year' => $item['date'],
+                                    'value' => $item['value']
+                                ]);
+                                break;
+                            }
+                        }
                     }
                 } catch (\Exception $e) {
                     Log::error("Failed to fetch Inflation for {$country->code_alpha3}");
@@ -80,17 +96,21 @@ class CountryController extends Controller
                 try {
                     $url = "https://api.worldbank.org/v2/country/{$country->code_alpha3}/indicator/SP.POP.TOTL?format=json";
                     $response = Http::timeout(5)->get($url);
-                    if ($response->successful() && isset($response[1][0]['value'])) {
-                        $value = $response[1][0]['value'];
-                        $year = $response[1][0]['date'];
-                        $populationRecord = EconomicIndicator::create([
-                            'country_id' => $country->id,
-                            'indicator_type' => 'population',
-                            'year' => $year,
-                            'value' => $value
-                        ]);
-                        // Update the country's population column as well for the dashboard!
-                        $country->update(['population' => $value]);
+                    if ($response->successful() && isset($response[1]) && is_array($response[1])) {
+                        $recentYears = array_slice($response[1], 0, 4);
+                        foreach ($recentYears as $item) {
+                            if (isset($item['value']) && !is_null($item['value'])) {
+                                $populationRecord = EconomicIndicator::create([
+                                    'country_id' => $country->id,
+                                    'indicator_type' => 'population',
+                                    'year' => $item['date'],
+                                    'value' => $item['value']
+                                ]);
+                                // Update the country's population column as well for the dashboard!
+                                $country->update(['population' => $item['value']]);
+                                break;
+                            }
+                        }
                     }
                 } catch (\Exception $e) {
                     Log::error("Failed to fetch Population for {$country->code_alpha3}");

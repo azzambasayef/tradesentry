@@ -133,15 +133,20 @@
                         <i class="fas fa-chart-line me-1"></i> Risk Engine
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('compare.*') ? 'active' : '' }}" href="{{ route('compare.index') }}">
+                        <i class="fas fa-balance-scale me-1"></i> Compare
+                    </a>
+                </li>
             </ul>
 
             <!-- Right Menu (Search, Clock, Profile) -->
             <div class="d-flex align-items-center gap-3">
                 <!-- Search Bar -->
-                <div class="position-relative d-none d-xl-block">
+                <form action="{{ route('countries.index') }}" method="GET" class="position-relative d-none d-xl-block m-0">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="form-control global-search" placeholder="Search countries, ports, ships...">
-                </div>
+                    <input type="text" name="q" value="{{ request('q') }}" class="form-control global-search" placeholder="Search countries, capitals, regions...">
+                </form>
 
                 <!-- Clock -->
                 <div class="text-muted d-none d-lg-flex align-items-center border-start border-secondary ps-3 ms-2 text-nowrap">

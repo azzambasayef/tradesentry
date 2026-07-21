@@ -11,6 +11,7 @@
     <div class="col-md-4 mb-4">
         <div class="card shadow h-100">
             <div class="card-body text-center d-flex flex-column">
+                <img src="https://flagcdn.com/w80/{{ strtolower($country->code) }}.png" alt="Flag of {{ $country->name }}" class="mx-auto mb-3 shadow-sm rounded border border-secondary" style="height: 40px; object-fit: cover; width: 60px;">
                 <h4 class="card-title text-light">{{ $country->name }}</h4>
                 <p class="text-muted mb-2">{{ $country->region }} ({{ $country->code }})</p>
                 <div class="d-flex justify-content-around mb-4 mt-3">

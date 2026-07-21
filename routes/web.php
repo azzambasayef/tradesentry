@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/risk/recalculate', [RiskController::class, 'recalculate'])->name('risk.recalculate');
     Route::get('/news', [NewsController::class, 'index'])->name('news.index');
     Route::post('/news/fetch', [NewsController::class, 'fetch'])->name('news.fetch');
+    Route::get('/compare', [App\Http\Controllers\ComparisonController::class, 'index'])->name('compare.index');
+    Route::post('/api/compare', [App\Http\Controllers\ComparisonController::class, 'compare'])->name('compare.fetch');
 
     // AJAX Endpoint for fetching all countries
     Route::get('/api/countries', function () {
