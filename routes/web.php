@@ -8,6 +8,7 @@ use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\RiskController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\WatchlistController;
+use App\Http\Controllers\ApiDocsController;
 
 Route::get('/', function () {
     return redirect('/dashboard');
@@ -23,6 +24,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Protected Routes
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/api-docs', [ApiDocsController::class, 'index'])->name('api-docs.index');
     
     // Watchlist Routes
     Route::get('/watchlist', [WatchlistController::class, 'index'])->name('watchlist.index');

@@ -134,7 +134,7 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->routeIs('compare.*') || request()->routeIs('watchlist.*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs('compare.*') || request()->routeIs('watchlist.*') || request()->routeIs('api-docs.*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-ellipsis-h me-1"></i> Other
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark shadow" style="background-color: var(--card-bg); border-color: #1e293b; margin-top: 0;">
@@ -146,6 +146,11 @@
                         <li>
                             <a class="dropdown-item {{ request()->routeIs('watchlist.*') ? 'active bg-primary-blue text-white' : '' }}" href="{{ route('watchlist.index') }}">
                                 <i class="fas fa-star text-warning me-2"></i> Watchlist
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('api-docs.*') ? 'active bg-primary-blue text-white' : '' }}" href="{{ route('api-docs.index') }}">
+                                <i class="fas fa-code me-2 text-success"></i> API Documentation
                             </a>
                         </li>
                     </ul>
