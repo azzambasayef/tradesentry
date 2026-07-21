@@ -170,12 +170,6 @@
                     <i class="far fa-clock text-accent me-1"></i> <span id="utc-clock">00:00:00 UTC</span>
                 </div>
 
-                <!-- Notifications -->
-                <a href="#" class="text-light position-relative text-decoration-none mx-2">
-                    <i class="fas fa-bell fs-5"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">3</span>
-                </a>
-
                 <!-- Profile Dropdown -->
                 <div class="dropdown">
                     <a href="#" class="text-light text-decoration-none fw-medium dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
