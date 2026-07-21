@@ -133,10 +133,22 @@
                         <i class="fas fa-chart-line me-1"></i> Risk Engine
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('compare.*') ? 'active' : '' }}" href="{{ route('compare.index') }}">
-                        <i class="fas fa-balance-scale me-1"></i> Compare
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs('compare.*') || request()->routeIs('watchlist.*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-ellipsis-h me-1"></i> Other
                     </a>
+                    <ul class="dropdown-menu dropdown-menu-dark shadow" style="background-color: var(--card-bg); border-color: #1e293b; margin-top: 0;">
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('compare.*') ? 'active bg-primary-blue text-white' : '' }}" href="{{ route('compare.index') }}">
+                                <i class="fas fa-balance-scale me-2 text-primary-blue"></i> Compare Engine
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('watchlist.*') ? 'active bg-primary-blue text-white' : '' }}" href="{{ route('watchlist.index') }}">
+                                <i class="fas fa-star text-warning me-2"></i> Watchlist
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
 
@@ -162,13 +174,16 @@
                 <!-- Profile Dropdown -->
                 <div class="dropdown">
                     <a href="#" class="text-light text-decoration-none fw-medium dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
-                        <div class="bg-secondary rounded-circle d-inline-flex justify-content-center align-items-center me-2" style="width: 32px; height: 32px; background-color: var(--primary-blue) !important;">
+                        <div class="bg-secondary rounded-circle d-inline-flex justify-content-center align-items-center" style="width: 32px; height: 32px; background-color: var(--primary-blue) !important;">
                             <i class="fas fa-user text-white"></i>
                         </div>
-                        <span class="d-none d-xl-inline-block text-truncate" style="max-width: 100px;">{{ Auth::user()->name }}</span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark shadow" style="background-color: var(--card-bg); border-color: #1e293b;">
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark shadow mt-2" style="background-color: var(--card-bg); border-color: #1e293b;">
+                        <li class="px-3 py-2 border-bottom border-secondary mb-1">
+                            <span class="d-block text-light fw-bold">{{ Auth::user()->name }}</span>
+                            <small class="text-muted">{{ Auth::user()->email }}</small>
+                        </li>
+                        <li><a class="dropdown-item mt-1" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
                         <li><hr class="dropdown-divider border-secondary"></li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST" class="px-2">
@@ -195,8 +210,10 @@
         const clockElement = document.getElementById('utc-clock');
         if (clockElement) {
             const now = new Date();
-            const timeString = now.toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour12: false });
-            clockElement.textContent = timeString + ' WIB';
+            const timeString = now.toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour12: false, hour: '2-digit', minute: '2-digit' });
+            // JS toLocaleTimeString sometimes uses '.' instead of ':' for id-ID, so let's format it directly just in case or replace it.
+            const finalTime = timeString.replace('.', ':');
+            clockElement.textContent = finalTime + ' WIB';
         }
     };
     setInterval(updateClock, 1000);

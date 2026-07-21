@@ -6,11 +6,20 @@
 <div class="row g-4">
     <!-- Header -->
     <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <div class="d-flex align-items-center">
-                <h2 class="text-light m-0 fw-bold me-3">{{ $country->name }}</h2>
-                <span class="badge bg-secondary fs-6 border border-dark">{{ $country->code }} / {{ $country->code_alpha3 }}</span>
-            </div>
+        <div class="d-flex align-items-center mb-4 border-bottom border-secondary pb-3">
+        @php
+            $isWatchlisted = Auth::user() ? Auth::user()->watchlists->contains('country_id', $country->id) : false;
+        @endphp
+        <img src="https://flagcdn.com/w160/{{ strtolower($country->code) }}.png" alt="Flag of {{ $country->name }}" class="border border-secondary shadow rounded me-4" style="height: 60px; object-fit: cover;">
+        <div class="flex-grow-1">
+            <h2 class="text-light m-0 d-flex align-items-center">
+                {{ $country->name }}
+                <button onclick="toggleWatchlist({{ $country->id }})" class="btn btn-link p-0 ms-3 text-decoration-none" title="Toggle Watchlist">
+                    <i class="fas fa-star {{ $isWatchlisted ? 'text-warning' : 'text-secondary opacity-50' }} fs-3" id="star-show-{{ $country->id }}"></i>
+                </button>
+            </h2>
+            <p class="text-muted m-0 fs-5">{{ $country->region }} &bull; {{ $country->code_alpha3 }}</p>
+        </div>
             <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left me-2"></i>Back to Map</a>
         </div>
         <p class="text-muted"><i class="fas fa-map-marker-alt text-primary-blue me-2"></i>Region: {{ $country->region }} ({{ $country->subregion }}) | Capital: {{ $country->capital ?? 'N/A' }}</p>
@@ -307,5 +316,26 @@
         
         } // End of initCharts()
     });
+    function toggleWatchlist(countryId) {
+        fetch(`/watchlist/toggle/${countryId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const star = document.getElementById(`star-show-${countryId}`);
+            if (data.status === 'added') {
+                star.classList.remove('text-secondary', 'opacity-50');
+                star.classList.add('text-warning');
+            } else {
+                star.classList.remove('text-warning');
+                star.classList.add('text-secondary', 'opacity-50');
+            }
+        })
+        .catch(error => console.error('Error toggling watchlist:', error));
+    }
 </script>
 @endsection

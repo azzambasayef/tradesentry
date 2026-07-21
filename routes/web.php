@@ -7,6 +7,7 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\RiskController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\WatchlistController;
 
 Route::get('/', function () {
     return redirect('/dashboard');
@@ -23,6 +24,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
+    // Watchlist Routes
+    Route::get('/watchlist', [WatchlistController::class, 'index'])->name('watchlist.index');
+    Route::post('/watchlist/toggle/{country_id}', [WatchlistController::class, 'toggle'])->name('watchlist.toggle');
+
     // Country Dashboard
     Route::get('/countries/{id}', [CountryController::class, 'show'])->name('countries.show');
     Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');

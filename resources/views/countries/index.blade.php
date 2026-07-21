@@ -8,9 +8,15 @@
 
 <div class="row">
     @foreach($countries as $country)
-    <div class="col-md-4 mb-4">
-        <div class="card shadow h-100">
-            <div class="card-body text-center d-flex flex-column">
+    @php
+        $isWatchlisted = Auth::user() ? Auth::user()->watchlists->contains('country_id', $country->id) : false;
+    @endphp
+    <div class="col-md-4 mb-4 country-card">
+        <div class="card shadow h-100 position-relative">
+            <button onclick="toggleWatchlist({{ $country->id }})" class="btn btn-link position-absolute top-0 end-0 m-2" style="z-index: 10;">
+                <i class="fas fa-star fs-4 {{ $isWatchlisted ? 'text-warning' : 'text-secondary opacity-50' }}" id="star-{{ $country->id }}"></i>
+            </button>
+            <div class="card-body text-center d-flex flex-column pt-4">
                 <img src="https://flagcdn.com/w80/{{ strtolower($country->code) }}.png" alt="Flag of {{ $country->name }}" class="mx-auto mb-3 shadow-sm rounded border border-secondary" style="height: 40px; object-fit: cover; width: 60px;">
                 <h4 class="card-title text-light">{{ $country->name }}</h4>
                 <p class="text-muted mb-2">{{ $country->region }} ({{ $country->code }})</p>
@@ -32,4 +38,28 @@
     </div>
     @endforeach
 </div>
+
+<script>
+    function toggleWatchlist(countryId) {
+        fetch(`/watchlist/toggle/${countryId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const star = document.getElementById(`star-${countryId}`);
+            if (data.status === 'added') {
+                star.classList.remove('text-secondary', 'opacity-50');
+                star.classList.add('text-warning');
+            } else {
+                star.classList.remove('text-warning');
+                star.classList.add('text-secondary', 'opacity-50');
+            }
+        })
+        .catch(error => console.error('Error toggling watchlist:', error));
+    }
+</script>
 @endsection
