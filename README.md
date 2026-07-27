@@ -5,6 +5,8 @@
 ![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
+**🔴 LIVE DEMO:** [http://app-5ad89315-49fe-43a4-9224-c8c4bd5a0cd7.cleverapps.io/](http://app-5ad89315-49fe-43a4-9224-c8c4bd5a0cd7.cleverapps.io/)
+
 **TradeSentry** adalah sebuah platform pemantauan rantai pasok global (Supply Chain Monitoring) terpadu yang dirancang untuk mengukur, melacak, dan memvisualisasikan risiko perdagangan internasional secara *real-time*. Proyek ini dibangun untuk memenuhi kriteria Ujian Akhir Semester (UAS) Pemrograman Web.
 
 > **Dosen Pengampu:** Muhammad Ikhwani, S.Pd.I., M.Sc  
