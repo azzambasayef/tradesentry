@@ -41,6 +41,10 @@ class ShipSeeder extends Seeder
                 'name' => $shipName,
                 'origin_port_id' => $origin->id,
                 'destination_port_id' => $destination->id,
+                'route_geometry' => json_encode([
+                    [(float)$origin->lng, (float)$origin->lat],
+                    [(float)$destination->lng, (float)$destination->lat]
+                ]),
                 'progress_percentage' => $faker->randomFloat(2, 5, 95), // Between 5% and 95% progress
                 'speed_knots' => $faker->randomFloat(1, 15.0, 25.0),
                 'status' => 'In Transit',
