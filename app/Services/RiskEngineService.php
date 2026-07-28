@@ -33,6 +33,7 @@ class RiskEngineService
             $currencyRisk = min(max(abs(sin($exchangeRate->rate)) * 100, 10), 90);
         }
 
+        $newsRisk = 30; // default risk if no news found
         $newsArticles = \App\Models\NewsArticle::where('country_id', $country->id)->get();
         if ($newsArticles->count() > 0) {
             $averageScore = \App\Models\NewsSentiment::whereIn('news_article_id', $newsArticles->pluck('id'))->avg('score');
