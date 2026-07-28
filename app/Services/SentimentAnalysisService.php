@@ -18,9 +18,6 @@ class SentimentAnalysisService
         $this->negativeWords = DB::table('negative_words')->pluck('word')->toArray();
     }
 
-    /**
-     * Store and analyze an article
-     */
     public function processArticle($title, $description, $url, $source, $countryId, $publishedAt = null)
     {
         $contentToAnalyze = strtolower($title . " " . $description);
@@ -28,7 +25,6 @@ class SentimentAnalysisService
         $positiveCount = 0;
         $negativeCount = 0;
 
-        // Use regex with word boundaries \b to ensure exact match and avoid substring matching (e.g. warfare matched by war)
         foreach ($this->positiveWords as $word) {
             $pattern = '/\b' . preg_quote($word, '/') . '\b/i';
             $positiveCount += preg_match_all($pattern, $contentToAnalyze);
@@ -39,7 +35,7 @@ class SentimentAnalysisService
             $negativeCount += preg_match_all($pattern, $contentToAnalyze);
         }
 
-        // Calculate a basic Lexicon Score
+       
         $netScore = $negativeCount - $positiveCount;
         $normalizedRisk = 50 + ($netScore * 10);
         $riskScore = max(0, min(100, $normalizedRisk)); 

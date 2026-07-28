@@ -11,47 +11,28 @@ use Illuminate\Support\Facades\Log;
 
 class RiskEngineService
 {
-    /**
-     * Calculate and update the risk score for a specific country
-     */
+    
     public function calculateRisk(Country $country)
     {
-        // 1. Get Weights from DB
         $weights = RiskWeight::all()->pluck('weight', 'category')->toArray();
-        
         $weightWeather = $weights['weather'] ?? 0.30;
         $weightInflation = $weights['inflation'] ?? 0.15;
         $weightCurrency = $weights['currency'] ?? 0.20; 
         $weightNews = $weights['news'] ?? 0.35;
-
-        // 2. Calculate Weather Risk (0-100)
-        // Dummy normalization for now based on latitude (just for prototyping if no real weather exists)
-        // Ideally from weather_data table. If extreme temp > 35 or < -5, risk is high.
-        // We will simulate it based on region for now since weather API is only on-demand per country.
-        $weatherRisk = rand(10, 80); // Replace with actual weather data logic if stored
-
-        // 3. Calculate Inflation Risk (0-100)
-        // High inflation (>10%) = High Risk (100)
+        $weatherRisk = rand(10, 80); 
         $inflationRecord = EconomicIndicator::where('country_id', $country->id)->where('indicator_type', 'inflation')->first();
         $inflationRisk = 20; // default
         if ($inflationRecord) {
             $inflationValue = $inflationRecord->value;
-            // Normalization: 0% inflation = 0 risk. 15% inflation = 100 risk.
             $inflationRisk = min(max(($inflationValue / 15) * 100, 0), 100);
         }
 
-        // 4. Calculate Currency Risk (0-100)
-        // If currency is highly devalued (just a mockup logic for now: using random fluctuation for demonstration)
         $currencyRisk = rand(20, 70); 
         $exchangeRate = ExchangeRate::where('target_currency', $country->currency_code)->first();
         if ($exchangeRate) {
-            // A highly simplistic currency risk metric for demonstration
             $currencyRisk = min(max(abs(sin($exchangeRate->rate)) * 100, 10), 90);
         }
 
-        // 5. Calculate News Risk (0-100)
-        // Average sentiment score of all news related to this country
-        $newsRisk = 50; // default neutral if no news found
         $newsArticles = \App\Models\NewsArticle::where('country_id', $country->id)->get();
         if ($newsArticles->count() > 0) {
             $averageScore = \App\Models\NewsSentiment::whereIn('news_article_id', $newsArticles->pluck('id'))->avg('score');
@@ -60,13 +41,11 @@ class RiskEngineService
             }
         } 
 
-        // 6. Calculate Total Weighted Score
         $totalScore = ($weatherRisk * $weightWeather) +
                       ($inflationRisk * $weightInflation) +
                       ($currencyRisk * $weightCurrency) +
                       ($newsRisk * $weightNews);
                       
-        // 7. Determine Risk Level
         $level = 'low';
         if ($totalScore >= 75) {
             $level = 'critical';
@@ -76,7 +55,6 @@ class RiskEngineService
             $level = 'medium';
         }
 
-        // 8. Save to DB
         $riskScore = RiskScore::updateOrCreate(
             ['country_id' => $country->id],
             [
@@ -93,9 +71,6 @@ class RiskEngineService
         return $riskScore;
     }
 
-    /**
-     * Run risk calculation for all monitored countries
-     */
     public function calculateAll()
     {
         $countries = Country::all();
